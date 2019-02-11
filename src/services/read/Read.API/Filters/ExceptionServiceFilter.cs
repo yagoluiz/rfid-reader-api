@@ -1,13 +1,13 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Read.API.Common;
-using Read.CrossCutting.Settings;
+using Read.API.Settings;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 
 namespace Read.API.Filters
@@ -26,7 +26,7 @@ namespace Read.API.Filters
         public async void OnException(ExceptionContext context)
         {
             var telemetry = new TelemetryClient();
-            telemetry.InstrumentationKey = _applicationInsights.InstrumentationKey;
+            telemetry.InstrumentationKey = _applicationInsights.InstrumentKey;
 
             var time = DateTime.Now;
             var sw = Stopwatch.StartNew();
@@ -38,21 +38,21 @@ namespace Read.API.Filters
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            if (_hostingEnvironment.IsDevelopment() || _hostingEnvironment.IsStaging())
+            var model = new ProblemDetails
             {
-                var erros = new string[] { $"{context.Exception.Message}/{context.Exception.StackTrace}" };
-                var response = new ResponseCommon(null, "Processing error",
-                    new ResponseErrorCommon(erros.Length, erros));
+                Title = "Internal server error",
+                Detail = context.Exception.Message
+            };
 
-                await context.HttpContext.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            if (!_hostingEnvironment.IsProduction())
+            {
+                model.Detail += $": {context.Exception.StackTrace}";
             }
-            else
-            {
-                var erros = new string[] { "Processing error" };
-                var response = new ResponseCommon(null, "Processing error",
-                    new ResponseErrorCommon(erros.Length, erros));
 
-                await context.HttpContext.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            using (var writer = new StreamWriter(context.HttpContext.Response.Body))
+            {
+                new JsonSerializer().Serialize(writer, model);
+                await writer.FlushAsync().ConfigureAwait(false);
             }
         }
     }

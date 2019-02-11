@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,75 +6,59 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
-using Polly;
+using Read.API.Features.Read;
 using Read.API.Filters;
-using Read.API.Services;
-using Read.API.Services.Interfaces;
-using Read.CrossCutting.IoC;
-using Read.CrossCutting.Settings;
-using Read.Infra.Context;
-using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.IO;
+using Read.API.Settings;
+using Read.API.Swagger;
 using System.IO.Compression;
+using System.Reflection;
 
+[assembly: ApiConventionType(typeof(MyApiConventions))]
 namespace Read.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            HostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment HostingEnvironment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(x =>
             {
                 x.Filters.Add(typeof(ExceptionServiceFilter));
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            .AddJsonOptions(options =>
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddJsonOptions(x =>
             {
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                x.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
-            services.AddHttpClient<StorageContext>()
-                .AddTransientHttpErrorPolicy(policyBuilder =>
-                policyBuilder.CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 2, durationOfBreak: TimeSpan.FromMinutes(1)
-            ));
             services.AddApiVersioning(x => x.ApiVersionReader = new HeaderApiVersionReader("api-version"));
             services.Configure<GzipCompressionProviderOptions>(x => x.Level = CompressionLevel.Optimal);
             services.AddResponseCompression(x =>
             {
                 x.Providers.Add<GzipCompressionProvider>();
             });
-            services.AddSwaggerGen(x =>
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddSwaggerDocument(x =>
             {
-                x.SwaggerDoc("v1", new Info
+                x.PostProcess = document =>
                 {
-                    Version = "v1",
-                    Title = "Read API",
-                    Description = "Readings performed by the RFID device"
-                });
-
-                if (PlatformServices.Default.Application.ApplicationName != "testhost")
-                {
-                    x.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, $"{PlatformServices.Default.Application.ApplicationName}.xml"));
-                }
+                    document.Info.Version = "v1";
+                    document.Info.Title = "Read API";
+                };
             });
-            services.AddAutoMapper();
+            services.AddHealthChecks().AddCheck<ReadHealthCheck>("ReadHealthCheck");
 
             RegisterServices(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (!env.IsProduction())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -86,14 +70,9 @@ namespace Read.API
             app.UseMvc();
             app.UseHttpsRedirection();
             app.UseResponseCompression();
-            app.UseSwagger(x =>
-            {
-                x.RouteTemplate = "swagger/{documentName}/swagger.json";
-            });
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Read API - V1");
-            });
+            app.UseSwagger();
+            app.UseSwaggerUi3();
+            app.UseHealthChecks("/hc");
         }
 
         #region Services
@@ -102,9 +81,8 @@ namespace Read.API
         {
             services.Configure<ApplicationInsights>(Configuration.GetSection("ApplicationInsights"));
 
-            services.AddScoped<IReadService, ReadService>();
-
-            StartupIoC.RegisterServices(services);
+            services.AddScoped<IReadRepository, ReadRepository>();
+            services.AddScoped<ReadContext>();
         }
 
         #endregion

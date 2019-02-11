@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
-EXPOSE 3863
-EXPOSE 44395
+EXPOSE 80
+EXPOSE 443
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY services/read/Read.API/Read.API.csproj services/read/Read.API/
 RUN dotnet restore services/read/Read.API/Read.API.csproj

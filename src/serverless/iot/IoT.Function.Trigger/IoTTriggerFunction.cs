@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using IoT.Function.Trigger.Models;
 using System.Threading.Tasks;
 using IoT.Function.Trigger.Services;
+using IoT.Function.Trigger.Enums;
 
 namespace IoT.Function.Trigger
 {
@@ -17,17 +18,40 @@ namespace IoT.Function.Trigger
         [FunctionName("IoTTriggerFunction")]
         public static async Task Run([IoTHubTrigger("messages/events",
             Connection = "ConnectionString",
-            ConsumerGroup = "$Default")]EventData message,
+            ConsumerGroup = "$Default")]EventData[] events,
             ILogger log)
         {
             log.LogInformation($"EventHubTriggerFunction executed: {DateTime.Now}");
 
-            var messageEvent = Encoding.UTF8.GetString(message.Body.Array);
+            foreach (EventData eventData in events)
+            {
+                var messageBody = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
+                var telemetryTypeModel = JsonConvert.DeserializeObject<TelemetryTypeModel>(messageBody);
 
-            log.LogInformation($"C# IoT Hub trigger function processed a message: {messageEvent}");
+                log.LogInformation($"EventHubTriggerFunction message: {messageBody}");
+                log.LogInformation($"EventHubTriggerFunction telemetry type: {telemetryTypeModel.TelemetryType}");
 
-            var telemetry = JsonConvert.DeserializeObject<TelemetryModel>(messageEvent);
-            await CosmosService.InsertDocumentAsync(telemetry);
+                switch (telemetryTypeModel.TelemetryType)
+                {
+                    case (int)TelemetryTypeEnum.TELEMETRY:
+                        var telemetryModel = JsonConvert.DeserializeObject<TelemetryModel>(messageBody);
+                        await CosmosService.InsertDocumentTelemetryAsync(telemetryModel);
+                        break;
+                    case (int)TelemetryTypeEnum.READ:
+                        var readModel = JsonConvert.DeserializeObject<ReadModel>(messageBody);
+                        await CosmosService.InsertDocumentReadAsync(readModel);
+                        break;
+                    case (int)TelemetryTypeEnum.LOG:
+                        var logName = Guid.NewGuid().ToString();
+                        await StorageService.InsertBlobAsync($"{logName}.json", messageBody);
+                        break;
+                    default:
+                        log.LogInformation($"EventHubTriggerFunction telemetry type invalid: {telemetryTypeModel.TelemetryType}");
+                        break;
+                }
+
+                await Task.Yield();
+            }
 
             log.LogInformation($"EventHubTriggerFunction finished: {DateTime.Now}");
         }

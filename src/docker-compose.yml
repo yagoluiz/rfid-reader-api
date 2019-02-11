@@ -1,26 +1,24 @@
 version: '3.4'
 
 services:
-  read.api:
-    image: ${DOCKER_REGISTRY}readapi
-    build:
-      context: .
-      dockerfile: services/read/Read.API/Dockerfile
-
   ocelot.api:
-    image: ${DOCKER_REGISTRY}ocelotapi
+    image: ${DOCKER_REGISTRY-}ocelotapi
     build:
       context: .
       dockerfile: gateway/ocelot/Ocelot.API/Dockerfile
-
+  read.api:
+    image: ${DOCKER_REGISTRY-}readapi
+    build:
+      context: .
+      dockerfile: services/read/Read.API/Dockerfile
+  telemetry.api:
+    image: ${DOCKER_REGISTRY-}telemetryapi
+    build:
+      context: .
+      dockerfile: services/telemetry/Telemetry.API/Dockerfile
   log.api:
-    image: ${DOCKER_REGISTRY}logapi
+    image: ${DOCKER_REGISTRY-}logapi
     build:
       context: .
       dockerfile: services/log/Log.API/Dockerfile
 
-  monitoring.api:
-    image: ${DOCKER_REGISTRY}monitoringapi
-    build:
-      context: .
-      dockerfile: services/monitoring/Monitoring.API/Dockerfile
