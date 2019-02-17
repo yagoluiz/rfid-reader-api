@@ -16,9 +16,3 @@ services:
     build:
       context: .
       dockerfile: services/telemetry/Telemetry.API/Dockerfile
-  log.api:
-    image: ${DOCKER_REGISTRY-}logapi
-    build:
-      context: .
-      dockerfile: services/log/Log.API/Dockerfile
-
