@@ -1,13 +1,12 @@
-﻿using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
+using SSO.API.Certs;
+using SSO.API.Configuration;
 
-namespace Ocelot.API
+namespace SSO.API
 {
     public class Startup
     {
@@ -20,18 +19,13 @@ namespace Ocelot.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            void options(IdentityServerAuthenticationOptions identityServer)
-            {
-                identityServer.Authority = Configuration.GetSection("IdentityServer:Authority").Value;
-                identityServer.ApiName = Configuration.GetSection("IdentityServer:ApiName").Value;
-                identityServer.ApiSecret = Configuration.GetSection("IdentityServer:ApiSecret").Value;
-                identityServer.SupportedTokens = SupportedTokens.Both;
-            }
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
-            services.AddOcelot(Configuration);
-            services.AddAuthentication().AddIdentityServerAuthentication(Configuration.GetSection("IdentityServer:ProviderKey").Value, options);
+            services.AddIdentityServer()
+                .AddSigningCredential(Certificate.Get())
+                .AddInMemoryIdentityResources(Config.GetResources())
+                .AddInMemoryApiResources(Config.GetApis())
+                .AddInMemoryClients(Config.GetClients());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -48,7 +42,7 @@ namespace Ocelot.API
                 x.AllowAnyMethod();
                 x.AllowCredentials();
             });
-            app.UseOcelot().Wait();
+            app.UseIdentityServer();
         }
     }
 }

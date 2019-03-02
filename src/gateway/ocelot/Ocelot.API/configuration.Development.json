@@ -1,16 +1,16 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/{version}/reads",
+      "DownstreamPathTemplate": "/connect/token",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "read.api",
+          "Host": "sso.api",
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/{version}/reads",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamPathTemplate": "/connect/token",
+      "UpstreamHttpMethod": [ "Post" ],
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 10000,
@@ -21,15 +21,15 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/{version}/logs",
+      "DownstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "log.api",
+          "Host": "read.api",
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/api/{version}/logs",
+      "UpstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
       "UpstreamHttpMethod": [ "Get" ],
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
@@ -38,6 +38,34 @@
       },
       "FileCacheOptions": {
         "TtlSeconds": 15
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "log.api",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 10000,
+        "TimeoutValue": 5000
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
       }
     }
   ],

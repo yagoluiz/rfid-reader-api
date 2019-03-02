@@ -1,12 +1,15 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Telemetry.API.Extensions;
 using Telemetry.API.Features.Telemetry.List;
 
 namespace Telemetry.API.Features.Telemetry
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
     [Route("api/v{version:apiVersion}/[controller]s")]

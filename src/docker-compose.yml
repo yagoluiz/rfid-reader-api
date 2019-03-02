@@ -6,13 +6,24 @@ services:
     build:
       context: .
       dockerfile: gateway/ocelot/Ocelot.API/Dockerfile
+
+  sso.api:
+    image: ${DOCKER_REGISTRY-}ssoapi
+    build:
+      context: .
+      dockerfile: security/sso/SSO.API/Dockerfile
+
+
   read.api:
     image: ${DOCKER_REGISTRY-}readapi
     build:
       context: .
       dockerfile: services/read/Read.API/Dockerfile
+
+
   telemetry.api:
     image: ${DOCKER_REGISTRY-}telemetryapi
     build:
       context: .
       dockerfile: services/telemetry/Telemetry.API/Dockerfile
+

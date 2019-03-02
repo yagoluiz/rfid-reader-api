@@ -2,6 +2,6 @@
 {
     public class ApplicationInsights
     {
-        public string InstrumentKey { get; set; }
+        public string InstrumentationKey { get; }
     }
 }

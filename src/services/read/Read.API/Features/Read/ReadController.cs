@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Read.API.Extensions;
 using Read.API.Features.Read.List;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 namespace Read.API.Features.Read
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
     [Route("api/v{version:apiVersion}/[controller]s")]

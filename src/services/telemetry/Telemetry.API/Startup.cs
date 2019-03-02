@@ -1,17 +1,24 @@
-﻿using MediatR;
+﻿using HealthChecks.UI.Client;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using NSwag;
 using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.Processors.Security;
 using System.IO.Compression;
 using System.Reflection;
+using Telemetry.API.Extensions;
 using Telemetry.API.Features.Telemetry;
-using Telemetry.API.Filters;
+using Telemetry.API.Middleware;
 using Telemetry.API.Settings;
 using Telemetry.API.Swagger;
 
@@ -29,14 +36,15 @@ namespace Telemetry.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(x =>
-            {
-                x.Filters.Add(typeof(ExceptionServiceFilter));
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(x =>
             {
                 x.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = TokenAuthenticationOptions.Bearer;
+            }).AddBearerToken(null);
             services.AddApiVersioning(x => x.ApiVersionReader = new HeaderApiVersionReader("api-version"));
             services.Configure<GzipCompressionProviderOptions>(x => x.Level = CompressionLevel.Optimal);
             services.AddResponseCompression(x =>
@@ -44,20 +52,30 @@ namespace Telemetry.API
                 x.Providers.Add<GzipCompressionProvider>();
             });
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddSwaggerDocument(x =>
+            services.AddOpenApiDocument(document =>
             {
-                x.PostProcess = document =>
+                document.DocumentName = "v1";
+                document.Version = "v1";
+                document.Title = "API Telemetry";
+                document.Description = "RFID telemetry reading API";
+                document.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT"));
+                document.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT", new SwaggerSecurityScheme
                 {
-                    document.Info.Version = "v1";
-                    document.Info.Title = "Telemetry API";
-                };
+                    Type = SwaggerSecuritySchemeType.ApiKey,
+                    Name = HeaderNames.Authorization,
+                    Description = "Token SSO",
+                    In = SwaggerSecurityApiKeyLocation.Header
+                }));
             });
-            services.AddHealthChecks().AddCheck<TelemetryHealthCheck>("TelemetryHealthCheck");
+            services.AddHealthChecksUI()
+                .AddHealthChecks()
+                .AddCheck<TelemetryHealthCheck>("TelemetryHealthCheck")
+                .AddApplicationInsightsPublisher();
 
             RegisterServices(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ApplicationInsights> options)
         {
             if (env.IsDevelopment())
             {
@@ -68,12 +86,24 @@ namespace Telemetry.API
                 app.UseHsts();
             }
 
-            app.UseMvc();
             app.UseHttpsRedirection();
             app.UseResponseCompression();
             app.UseSwagger();
             app.UseSwaggerUi3();
-            app.UseHealthChecks("/hc");
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+            app.UseHealthChecksUI(setup =>
+            {
+                setup.UIPath = "/health-ui";
+            });
+            app.UseExceptionHandler(new ExceptionHandlerOptions
+            {
+                ExceptionHandler = new ErrorHandlerMiddleware(options, env).Invoke
+            });
+            app.UseMvc();
         }
 
         #region Services
