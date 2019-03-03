@@ -14,13 +14,13 @@ namespace Ocelot.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseApplicationInsights()
-                .UseStartup<Startup>()
-                    .ConfigureAppConfiguration((hostingContext, config) =>
-                    {
-                        config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                            .AddJsonFile("configuration.json", true, true)
-                            .AddJsonFile($"configuration.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                            .AddEnvironmentVariables();
-                    });
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                        .AddJsonFile("configuration.json", true, true)
+                        .AddJsonFile($"configuration.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                        .AddEnvironmentVariables();
+                })
+                .UseStartup<Startup>();
     }
 }

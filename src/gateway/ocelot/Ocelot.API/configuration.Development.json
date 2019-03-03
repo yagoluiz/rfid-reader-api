@@ -2,43 +2,27 @@
   "ReRoutes": [
     {
       "DownstreamPathTemplate": "/connect/token",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "sso.api",
-          "Port": 80
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/connect/token",
-      "UpstreamHttpMethod": [ "Post" ],
-      "QoSOptions": {
-        "ExceptionsAllowedBeforeBreaking": 3,
-        "DurationOfBreak": 10000,
-        "TimeoutValue": 5000
-      },
-      "FileCacheOptions": {
-        "TtlSeconds": 15
-      }
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "read.api",
-          "Port": 80
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
       "UpstreamHttpMethod": [ "Get" ],
-      "QoSOptions": {
-        "ExceptionsAllowedBeforeBreaking": 3,
-        "DurationOfBreak": 10000,
-        "TimeoutValue": 5000
-      },
-      "FileCacheOptions": {
-        "TtlSeconds": 15
-      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "api_gateway",
         "AllowedScopes": [ "gateway" ]
@@ -46,23 +30,15 @@
     },
     {
       "DownstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "log.api",
-          "Port": 80
+          "Host": "telemetry.api",
+          "Port": 443
         }
       ],
       "UpstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
       "UpstreamHttpMethod": [ "Get" ],
-      "QoSOptions": {
-        "ExceptionsAllowedBeforeBreaking": 3,
-        "DurationOfBreak": 10000,
-        "TimeoutValue": 5000
-      },
-      "FileCacheOptions": {
-        "TtlSeconds": 15
-      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "api_gateway",
         "AllowedScopes": [ "gateway" ]
