@@ -113,10 +113,10 @@ namespace Read.API
         {
             services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
             services.Configure<ReadTagsBackgroundSettings>(Configuration.GetSection("ReadTagsBackgroundSettings"));
-            
+
+            services.AddSingleton<ReadContext>();
             services.AddSingleton<IHostedService, ReadTagsBackgroundService>();
             services.AddTransient<IReadRepository, ReadRepository>();
-            services.AddSingleton<ReadContext>();
         }
 
         #endregion

@@ -112,8 +112,8 @@ namespace Telemetry.API
         {
             services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
 
-            services.AddScoped<ITelemetryRepository, TelemetryRepository>();
-            services.AddScoped<TelemetryContext>();
+            services.AddSingleton<TelemetryContext>();
+            services.AddTransient<ITelemetryRepository, TelemetryRepository>();
         }
 
         #endregion

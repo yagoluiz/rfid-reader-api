@@ -6,6 +6,6 @@ namespace Telemetry.API.Features.Telemetry
 {
     public interface ITelemetryRepository
     {
-        Task<IEnumerable<TelemetryList>> GetAllByLimit(int limit = 10);
+        Task<IEnumerable<TelemetryList>> GetAllLastReadByLimit(int limit = 100);
     }
 }

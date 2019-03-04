@@ -16,7 +16,7 @@ namespace Read.API.Features.Read.List
 
         public async Task<IEnumerable<ReadList>> Handle(ReadListRequest request, CancellationToken cancellationToken)
         {
-            return await _readRepository.GetAllByLimit(request.Limit);
+            return await _readRepository.GetAllLastReadByLimit(request.Limit);
         }
     }
 }

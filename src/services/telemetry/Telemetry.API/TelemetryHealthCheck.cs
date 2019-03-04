@@ -18,7 +18,7 @@ namespace Telemetry.API
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
         {
             var limit = 1;
-            var telemetry = await _telemetryRepository.GetAllByLimit(limit);
+            var telemetry = await _telemetryRepository.GetAllLastReadByLimit(limit);
 
             if (telemetry.Any())
             {

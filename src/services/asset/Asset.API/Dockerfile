@@ -5,14 +5,14 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
-COPY ["services/asset/Asset.API/Asset.API.csproj", "services/asset/Asset.API/"]
-RUN dotnet restore "services/asset/Asset.API/Asset.API.csproj"
+COPY services/asset/Asset.API/Asset.API.csproj services/asset/Asset.API/
+RUN dotnet restore services/asset/Asset.API/Asset.API.csproj
 COPY . .
-WORKDIR "/src/services/asset/Asset.API"
-RUN dotnet build "Asset.API.csproj" -c Release -o /app
+WORKDIR /src/services/asset/Asset.API
+RUN dotnet build Asset.API.csproj -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "Asset.API.csproj" -c Release -o /app
+RUN dotnet publish Asset.API.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

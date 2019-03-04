@@ -18,7 +18,7 @@ namespace Read.API
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
         {
             var limit = 1;
-            var read = await _readRepository.GetAllByLimit(limit);
+            var read = await _readRepository.GetAllLastReadByLimit(limit);
 
             if (read.Any())
             {

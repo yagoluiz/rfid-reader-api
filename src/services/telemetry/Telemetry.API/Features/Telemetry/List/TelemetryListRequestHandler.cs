@@ -16,7 +16,7 @@ namespace Telemetry.API.Features.Telemetry.List
 
         public async Task<IEnumerable<TelemetryList>> Handle(TelemetryListRequest request, CancellationToken cancellationToken)
         {
-            return await _telemetryRepository.GetAllByLimit(request.Limit);
+            return await _telemetryRepository.GetAllLastReadByLimit(request.Limit);
         }
     }
 }

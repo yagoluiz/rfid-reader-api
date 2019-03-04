@@ -23,8 +23,9 @@ namespace Read.API.Features.Read
             var readItems = new List<ReadEpcList>();
 
             var query = _readContext.DocumentClient.CreateDocumentQuery<ReadEpcList>(
-                UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
-                "SELECT DISTINCT read.epc FROM read",
+                UriFactory.CreateDocumentCollectionUri(_configuration["CosmosDB:Database"], _configuration["CosmosDB:Collection"]),
+                @"SELECT DISTINCT read.epc
+                    FROM read",
                 new FeedOptions { MaxItemCount = -1 })
                 .AsDocumentQuery();
 
@@ -37,13 +38,15 @@ namespace Read.API.Features.Read
             return readItems;
         }
 
-        public async Task<IEnumerable<ReadList>> GetAllByLimit(int limit = 10)
+        public async Task<IEnumerable<ReadList>> GetAllLastReadByLimit(int limit = 10)
         {
             var readItems = new List<ReadList>();
 
             var query = _readContext.DocumentClient.CreateDocumentQuery<ReadList>(
-                UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
-                $"SELECT TOP {limit} read.ip, read.epc, read.readDate, read.antenna FROM read",
+                UriFactory.CreateDocumentCollectionUri(_configuration["CosmosDB:Database"], _configuration["CosmosDB:Collection"]),
+                $@"SELECT TOP {limit} read.ip, read.epc, read.readDate, read.antenna
+                    FROM read
+                    ORDER BY read._ts DESC",
                 new FeedOptions { MaxItemCount = -1 })
                 .AsDocumentQuery();
 

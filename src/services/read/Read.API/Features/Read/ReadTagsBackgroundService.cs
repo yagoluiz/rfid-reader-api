@@ -30,7 +30,7 @@ namespace Read.API.Features.Read
         {
             _logger.LogDebug("ReadTagsBackgroundService is starting.");
 
-            stoppingToken.Register(() => _logger.LogDebug("#1 ReadTagsBackgroundService background task is stopping."));
+            stoppingToken.Register(() => _logger.LogDebug("ReadTagsBackgroundService background task is stopping."));
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -48,15 +48,15 @@ namespace Read.API.Features.Read
 
         private async Task CheckReadTagsAsync()
         {
-            _logger.LogDebug("Read tags background confirmed");
+            _logger.LogDebug("Check's read tags.");
 
             var reads = await _readRepository.GetAllEpc();
 
-            if (reads?.Count() > 0)
+            if (reads.Count() > 0)
             {
                 foreach (var read in reads)
                 {
-                    _logger.LogInformation("Publishing event: EPC => {Epc})", read.Epc);
+                    _logger.LogInformation("Publishing event: EPC => {Epc}).", read.Epc);
 
                     var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(read)));
 

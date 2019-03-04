@@ -27,3 +27,10 @@ services:
       context: .
       dockerfile: services/telemetry/Telemetry.API/Dockerfile
 
+
+  asset.api:
+    image: ${DOCKER_REGISTRY-}assetapi
+    build:
+      context: .
+      dockerfile: services/asset/Asset.API/Dockerfile
+

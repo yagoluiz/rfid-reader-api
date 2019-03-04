@@ -7,6 +7,6 @@ namespace Read.API.Features.Read
     public interface IReadRepository
     {
         Task<IEnumerable<ReadEpcList>> GetAllEpc();
-        Task<IEnumerable<ReadList>> GetAllByLimit(int limit = 10);
+        Task<IEnumerable<ReadList>> GetAllLastReadByLimit(int limit = 100);
     }
 }

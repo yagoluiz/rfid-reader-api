@@ -16,7 +16,7 @@ namespace Read.API.Features.Read
         }
 
         public IDocumentClient DocumentClient =>
-            new DocumentClient(new Uri(_configuration["EndpointUriRead"]), _configuration["PrimaryKeyRead"]);
+            new DocumentClient(new Uri(_configuration["CosmosDB:EndpointUri"]), _configuration["CosmosDB:PrimaryKey"]);
 
         public IQueueClient QueueClient =>
             new QueueClient(_configuration["ServiceBus:ConnectionString"], _configuration["ServiceBus:Queue"]);

@@ -18,21 +18,22 @@ namespace Telemetry.API.Features.Telemetry
             _telemetryContext = telemetryContext;
         }
 
-        public async Task<IEnumerable<TelemetryList>> GetAllByLimit(int limit = 10)
+        public async Task<IEnumerable<TelemetryList>> GetAllLastReadByLimit(int limit = 100)
         {
             var telemetryItems = new List<TelemetryList>();
 
             var query = _telemetryContext.DocumentClient.CreateDocumentQuery<TelemetryList>(
-                UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
-                new FeedOptions { MaxItemCount = limit })
+                UriFactory.CreateDocumentCollectionUri(_configuration["CosmosDB:Database"], _configuration["CosmosDB:Collection"]),
+                $@"SELECT TOP {limit} telemetry.ip, telemetry.temperature, telemetry.isConnection
+                    FROM telemetry
+                    ORDER BY telemetry._ts DESC",
+                new FeedOptions { MaxItemCount = -1 })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
             {
                 var results = await query.ExecuteNextAsync<TelemetryList>();
                 telemetryItems.AddRange(results);
-
-                if (telemetryItems.Count.Equals(limit)) break;
             }
 
             return telemetryItems;
