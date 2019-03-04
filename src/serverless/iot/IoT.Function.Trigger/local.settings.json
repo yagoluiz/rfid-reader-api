@@ -1,8 +1,8 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=rfid001;AccountKey=TmiE/2RR+ik3f8zW3I3R/eFFaPVEHAvF2wn9G7AI+8m2wHJ472MILbv06mv9Z+WuwEI4A6ffNXG/TYSHoDGKuA==;BlobEndpoint=https://rfid001.blob.core.windows.net/;TableEndpoint=https://rfid001.table.core.windows.net/;QueueEndpoint=https://rfid001.queue.core.windows.net/;FileEndpoint=https://rfid001.file.core.windows.net/",
-    "ConnectionString": "Endpoint=sb://ihsuprodcqres015dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=HJrNc/2eSZfVgqRZ0C+uh+cc1VvHygm4DdAVp7Jt3kY=;EntityPath=iothub-ehub-rfid-iot-h-960330-4acc2b4620",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=rfidstorage001;AccountKey=pDhvbFz9jUBoPj2n/I4Gi6VIwMNkHw4uj/8OwoHCGhdXlC1v+g3mE4WUrPQjJeWQt9xZs+37B1mK+PvTsFJtNA==;EndpointSuffix=core.windows.net",
+    "ConnectionString": "Endpoint=sb://ihsuprodblres069dednamespace.servicebus.windows.net/;SharedAccessKeyName=iothubowner;SharedAccessKey=2XTO5G3diDMhk0T7G7AqtAySQ4rRsRKpuAbISWPVufk=;EntityPath=iothub-ehub-rfid-iot-h-1347383-308d05100d",
     "EndpointUriTelemetry": "https://localhost:8081",
     "EndpointUriRead": "https://localhost:8081",
     "PrimaryKeyTelemetry": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",

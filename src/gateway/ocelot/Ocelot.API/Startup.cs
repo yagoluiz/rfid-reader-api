@@ -40,7 +40,12 @@ namespace Ocelot.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
+            app.UseHttpsRedirection();
             app.UseCors(x =>
             {
                 x.AllowAnyOrigin();

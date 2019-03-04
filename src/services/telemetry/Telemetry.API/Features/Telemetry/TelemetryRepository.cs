@@ -22,7 +22,7 @@ namespace Telemetry.API.Features.Telemetry
         {
             var telemetryItems = new List<TelemetryList>();
 
-            var query = _telemetryContext.Client.CreateDocumentQuery<TelemetryList>(
+            var query = _telemetryContext.DocumentClient.CreateDocumentQuery<TelemetryList>(
                 UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
                 new FeedOptions { MaxItemCount = limit })
                 .AsDocumentQuery();

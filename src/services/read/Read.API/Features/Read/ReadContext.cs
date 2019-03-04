@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Documents.Client;
+﻿using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -7,21 +9,16 @@ namespace Read.API.Features.Read
     public class ReadContext
     {
         private readonly IConfiguration _configuration;
-        private DocumentClient _documentClient;
 
         public ReadContext(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public DocumentClient Client
-        {
-            get
-            {
-                _documentClient = new DocumentClient(new Uri(_configuration["EndpointUriTelemetry"]), _configuration["PrimaryKeyTelemetry"]);
+        public IDocumentClient DocumentClient =>
+            new DocumentClient(new Uri(_configuration["EndpointUriRead"]), _configuration["PrimaryKeyRead"]);
 
-                return _documentClient;
-            }
-        }
+        public IQueueClient QueueClient =>
+            new QueueClient(_configuration["ServiceBus:ConnectionString"], _configuration["ServiceBus:Queue"]);
     }
 }

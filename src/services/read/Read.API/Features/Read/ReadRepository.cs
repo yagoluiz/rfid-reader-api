@@ -18,21 +18,39 @@ namespace Read.API.Features.Read
             _readContext = readContext;
         }
 
+        public async Task<IEnumerable<ReadEpcList>> GetAllEpc()
+        {
+            var readItems = new List<ReadEpcList>();
+
+            var query = _readContext.DocumentClient.CreateDocumentQuery<ReadEpcList>(
+                UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
+                "SELECT DISTINCT read.epc FROM read",
+                new FeedOptions { MaxItemCount = -1 })
+                .AsDocumentQuery();
+
+            while (query.HasMoreResults)
+            {
+                var results = await query.ExecuteNextAsync<ReadEpcList>();
+                readItems.AddRange(results);
+            }
+
+            return readItems;
+        }
+
         public async Task<IEnumerable<ReadList>> GetAllByLimit(int limit = 10)
         {
             var readItems = new List<ReadList>();
 
-            var query = _readContext.Client.CreateDocumentQuery<ReadList>(
+            var query = _readContext.DocumentClient.CreateDocumentQuery<ReadList>(
                 UriFactory.CreateDocumentCollectionUri(_configuration["Database"], _configuration["Collection"]),
-                new FeedOptions { MaxItemCount = limit })
+                $"SELECT TOP {limit} read.ip, read.epc, read.readDate, read.antenna FROM read",
+                new FeedOptions { MaxItemCount = -1 })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
             {
                 var results = await query.ExecuteNextAsync<ReadList>();
                 readItems.AddRange(results);
-
-                if (readItems.Count.Equals(limit)) break;
             }
 
             return readItems;

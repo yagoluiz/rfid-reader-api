@@ -15,12 +15,12 @@ namespace Read.API.Middleware
 {
     public class ErrorHandlerMiddleware
     {
-        private readonly ApplicationInsights _applicationInsights;
+        private readonly ApplicationInsightsSettings _applicationInsightsSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ErrorHandlerMiddleware(IOptions<ApplicationInsights> options, IHostingEnvironment hostingEnvironment)
+        public ErrorHandlerMiddleware(IOptions<ApplicationInsightsSettings> options, IHostingEnvironment hostingEnvironment)
         {
-            _applicationInsights = options.Value;
+            _applicationInsightsSettings = options.Value;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -31,7 +31,7 @@ namespace Read.API.Middleware
 
             var telemetry = new TelemetryClient()
             {
-                InstrumentationKey = _applicationInsights.InstrumentationKey
+                InstrumentationKey = _applicationInsightsSettings.InstrumentationKey
             };
 
             telemetry.Context.Operation.Id = Guid.NewGuid().ToString();

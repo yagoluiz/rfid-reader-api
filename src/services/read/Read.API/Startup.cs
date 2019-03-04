@@ -1,4 +1,6 @@
-﻿using HealthChecks.UI.Client;
+﻿using IHostedService = Microsoft.Extensions.Hosting.IHostedService;
+
+using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -74,7 +76,7 @@ namespace Read.API
             RegisterServices(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ApplicationInsights> options)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ApplicationInsightsSettings> options)
         {
             if (env.IsDevelopment())
             {
@@ -109,10 +111,12 @@ namespace Read.API
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.Configure<ApplicationInsights>(Configuration.GetSection("ApplicationInsights"));
-
-            services.AddScoped<IReadRepository, ReadRepository>();
-            services.AddScoped<ReadContext>();
+            services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
+            services.Configure<ReadTagsBackgroundSettings>(Configuration.GetSection("ReadTagsBackgroundSettings"));
+            
+            services.AddSingleton<IHostedService, ReadTagsBackgroundService>();
+            services.AddTransient<IReadRepository, ReadRepository>();
+            services.AddSingleton<ReadContext>();
         }
 
         #endregion

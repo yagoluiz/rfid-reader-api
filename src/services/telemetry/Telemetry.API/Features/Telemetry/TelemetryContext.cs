@@ -14,7 +14,7 @@ namespace Telemetry.API.Features.Telemetry
             _configuration = configuration;
         }
 
-        public DocumentClient Client
+        public DocumentClient DocumentClient
         {
             get
             {

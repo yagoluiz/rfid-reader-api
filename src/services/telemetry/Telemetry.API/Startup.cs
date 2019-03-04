@@ -75,7 +75,7 @@ namespace Telemetry.API
             RegisterServices(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ApplicationInsights> options)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptions<ApplicationInsightsSettings> options)
         {
             if (env.IsDevelopment())
             {
@@ -110,7 +110,7 @@ namespace Telemetry.API
 
         private void RegisterServices(IServiceCollection services)
         {
-            services.Configure<ApplicationInsights>(Configuration.GetSection("ApplicationInsights"));
+            services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
 
             services.AddScoped<ITelemetryRepository, TelemetryRepository>();
             services.AddScoped<TelemetryContext>();

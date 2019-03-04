@@ -1,6 +1,6 @@
 ﻿namespace Telemetry.API.Settings
 {
-    public class ApplicationInsights
+    public class ApplicationInsightsSettings
     {
         public string InstrumentationKey { get; }
     }
