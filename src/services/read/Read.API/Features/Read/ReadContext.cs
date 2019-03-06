@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.ServiceBus;
+using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -18,7 +18,7 @@ namespace Read.API.Features.Read
         public IDocumentClient DocumentClient =>
             new DocumentClient(new Uri(_configuration["CosmosDB:EndpointUri"]), _configuration["CosmosDB:PrimaryKey"]);
 
-        public IQueueClient QueueClient =>
-            new QueueClient(_configuration["ServiceBus:ConnectionString"], _configuration["ServiceBus:Queue"]);
+        public IMessageSender MessageSender =>
+            new MessageSender(_configuration["ServiceBus:ConnectionString"], _configuration["ServiceBus:Queue"]);
     }
 }

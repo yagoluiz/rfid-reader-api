@@ -2,7 +2,12 @@
 {
     public class AssetType
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public AssetType(string name)
+        {
+            Name = name;
+        }
+
+        public int Id { get; private set; }
+        public string Name { get; private set; }
     }
 }

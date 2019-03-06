@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,13 @@ namespace SSO.API
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            ForwardedHeadersOptions fordwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            };
+            fordwardedHeaderOptions.KnownNetworks.Clear();
+            fordwardedHeaderOptions.KnownProxies.Clear();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -40,7 +48,7 @@ namespace SSO.API
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(x =>
+            app.UseForwardedHeaders(fordwardedHeaderOptions).UseCors(x =>
             {
                 x.AllowAnyOrigin();
                 x.AllowAnyHeader();

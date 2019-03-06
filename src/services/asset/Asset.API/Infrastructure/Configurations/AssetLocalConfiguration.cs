@@ -1,7 +1,6 @@
 ﻿using Asset.API.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Asset.API.Infrastructure.Configurations
 {
@@ -9,7 +8,17 @@ namespace Asset.API.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<AssetLocal> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("AssetLocal");
+
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(x => x.Description)
+                .IsRequired(false)
+                .HasMaxLength(250);
         }
     }
 }

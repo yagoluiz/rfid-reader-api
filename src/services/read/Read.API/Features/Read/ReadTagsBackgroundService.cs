@@ -1,11 +1,9 @@
-﻿using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Read.API.Settings;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,14 +12,14 @@ namespace Read.API.Features.Read
     public class ReadTagsBackgroundService : BackgroundService
     {
         private readonly ReadTagsBackgroundSettings _readTagsBackgroundSettings;
-        private readonly ReadContext _readContext;
+        private readonly IReadServiceBus _readServiceBus;
         private readonly IReadRepository _readRepository;
         private readonly ILogger<ReadTagsBackgroundService> _logger;
 
-        public ReadTagsBackgroundService(IOptions<ReadTagsBackgroundSettings> options, ReadContext readContext, IReadRepository readRepository, ILogger<ReadTagsBackgroundService> logger)
+        public ReadTagsBackgroundService(IOptions<ReadTagsBackgroundSettings> options, IReadServiceBus readServiceBus, IReadRepository readRepository, ILogger<ReadTagsBackgroundService> logger)
         {
             _readTagsBackgroundSettings = options.Value;
-            _readContext = readContext;
+            _readServiceBus = readServiceBus;
             _readRepository = readRepository;
             _logger = logger;
         }
@@ -58,12 +56,12 @@ namespace Read.API.Features.Read
                 {
                     _logger.LogInformation("Publishing event: EPC => {Epc}).", read.Epc);
 
-                    var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(read)));
+                    var message = JsonConvert.SerializeObject(read);
 
-                    await _readContext.QueueClient.SendAsync(message);
+                    await _readServiceBus.SendAsync(message);
                 }
 
-                await _readContext.QueueClient.CloseAsync();
+                await _readServiceBus.CloseAsync();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using Asset.API.Extensions;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Asset.API
@@ -7,7 +8,7 @@ namespace Asset.API
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().SeedData().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

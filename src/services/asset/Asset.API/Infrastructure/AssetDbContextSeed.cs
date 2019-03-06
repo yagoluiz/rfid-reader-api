@@ -1,30 +1,78 @@
 ﻿using Asset.API.Infrastructure.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Asset.API.Infrastructure
 {
     public class AssetDbContextSeed
     {
-        public async Task SeedAsync(AssetDbContext context)
+        public void SeedInitial(AssetDbContext context)
         {
+            if (!context.AssetLocals.Any())
+            {
+                var locals = new List<AssetLocal>()
+                {
+                    new AssetLocal(name: "Garage"),
+                    new AssetLocal(name: "Concierge")
+                };
+
+                context.AddRange(locals);
+                context.SaveChanges();
+            }
+
             if (!context.AssetTypes.Any())
             {
                 var types = new List<AssetType>()
                 {
-                    new AssetType()
-                    {
-                        Name = "Eletronic"
-                    },
-                    new AssetType()
-                    {
-                        Name = "Furniture"
-                    }
+                    new AssetType(name: "Eletronic"),
+                    new AssetType(name: "Furniture")
                 };
 
-                await context.AddRangeAsync(types);
-                await context.SaveChangesAsync();
+                context.AddRange(types);
+                context.SaveChanges();
+            }
+
+            if (!context.AssetItems.Any())
+            {
+                var localGarageId = context.AssetLocals.First(x => x.Name == "Garage").Id;
+                var localConciergeId = context.AssetLocals.First(x => x.Name == "Concierge").Id;
+                var typeEletronicId = context.AssetTypes.First(x => x.Name == "Eletronic").Id;
+                var typeFurnitureId = context.AssetTypes.First(x => x.Name == "Furniture").Id;
+
+                var items = new List<AssetItem>()
+                {
+                    new AssetItem(id: Guid.NewGuid(),
+                        assetLocalId: localGarageId,
+                        assetTypeId: typeEletronicId,
+                        name: "Computer",
+                        identifierNumber: "A-001",
+                        serialNumber: "X6HSZBOBAPY6ZCZ",
+                        epc: "42414E303030303336343631",
+                        situation: true,
+                        dateCreated: DateTime.Now),
+                     new AssetItem(id: Guid.NewGuid(),
+                        assetLocalId: localGarageId,
+                        assetTypeId: typeFurnitureId,
+                        name: "Table",
+                        identifierNumber: "A-002",
+                        serialNumber: "N141SN4Z2ZZRD9K",
+                        epc: "414953443030303030303032",
+                        situation: true,
+                        dateCreated: DateTime.Now),
+                     new AssetItem(id: Guid.NewGuid(),
+                        assetLocalId: localConciergeId,
+                        assetTypeId: typeFurnitureId,
+                        name: "Chair",
+                        identifierNumber: "A-003",
+                        serialNumber: "TTN33BTWDC5E8SR",
+                        epc: "494E44303030303030613161",
+                        situation: true,
+                        dateCreated: DateTime.Now)
+                };
+
+                context.AddRange(items);
+                context.SaveChanges();
             }
         }
     }

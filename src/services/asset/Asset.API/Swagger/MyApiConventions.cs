@@ -8,7 +8,8 @@ namespace Asset.API.Swagger
         [ApiConventionNameMatch(ApiConventionNameMatchBehavior.Prefix)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(200)]
-        public static void List([ApiConventionNameMatch(ApiConventionNameMatchBehavior.Suffix)][ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)] object request) { }
+        [ProducesResponseType(404)]
+        public static void Get([ApiConventionNameMatch(ApiConventionNameMatchBehavior.Suffix)][ApiConventionTypeMatch(ApiConventionTypeMatchBehavior.Any)] object request) { }
 
     }
 }

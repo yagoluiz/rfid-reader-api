@@ -71,6 +71,8 @@ namespace Read.API
             services.AddHealthChecksUI()
                 .AddHealthChecks()
                 .AddCheck<ReadHealthCheck>("ReadHealthCheck")
+                .AddAzureServiceBusQueue(Configuration["ServiceBus:ConnectionString"],
+                    queueName: Configuration["ServiceBus:Queue"])
                 .AddApplicationInsightsPublisher();
 
             RegisterServices(services);
@@ -117,6 +119,7 @@ namespace Read.API
             services.AddSingleton<ReadContext>();
             services.AddSingleton<IHostedService, ReadTagsBackgroundService>();
             services.AddTransient<IReadRepository, ReadRepository>();
+            services.AddTransient<IReadServiceBus, ReadServiceBus>();
         }
 
         #endregion
