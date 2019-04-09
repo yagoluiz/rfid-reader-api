@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,10 +25,7 @@ namespace Asset.API.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            var time = DateTime.Now;
-            var sw = Stopwatch.StartNew();
-
-            var telemetry = new TelemetryClient()
+            var telemetry = new TelemetryClient
             {
                 InstrumentationKey = _applicationInsightsSettings.InstrumentationKey
             };
@@ -43,30 +39,30 @@ namespace Asset.API.Middleware
                 return;
             }
 
+            telemetry.TrackException(ex);
+
             var problemDetails = new ProblemDetails
             {
-                Instance = context.Request.HttpContext.Request.Path,
+                Title = "Internal Server Error",
+                Status = StatusCodes.Status500InternalServerError,
+                Instance = context.Request.Path.Value,
                 Detail = ex.Message
             };
 
-            problemDetails.Title = "Server error";
-            problemDetails.Status = StatusCodes.Status500InternalServerError;
-
             if (_hostingEnvironment.IsDevelopment())
             {
-                problemDetails.Detail += ": " + ex.StackTrace;
+                problemDetails.Detail += $": {ex.StackTrace}";
             }
 
             context.Response.StatusCode = problemDetails.Status.Value;
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = "application/problem+json";
 
             using (var writer = new StreamWriter(context.Response.Body))
             {
                 new JsonSerializer().Serialize(writer, problemDetails);
                 await writer.FlushAsync();
             }
-
-            telemetry.TrackRequest("Read API", time, sw.Elapsed, context.Response.StatusCode.ToString(), false);
         }
     }
 }
+
