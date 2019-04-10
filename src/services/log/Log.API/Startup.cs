@@ -1,4 +1,8 @@
 ﻿using HealthChecks.UI.Client;
+using Log.API.Extensions;
+using Log.API.Features.Log;
+using Log.API.Middleware;
+using Log.API.Settings;
 using Log.API.Swagger;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +66,8 @@ namespace Log.API
                     In = SwaggerSecurityApiKeyLocation.Header
                 }));
             });
+            services.AddHealthChecksUI()
+                .AddHealthChecks();
 
             RegisterServices(services);
         }
@@ -97,19 +103,16 @@ namespace Log.API
             app.UseMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+        #region Services
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
+
+            services.AddSingleton<LogContext>();
+            services.AddTransient<ILogRepository, LogRepository>();
         }
+
+        #endregion
     }
 }
