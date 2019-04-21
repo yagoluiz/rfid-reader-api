@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 COPY . .
 WORKDIR /src/security/sso/SSO.API
-RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet restore
 RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
