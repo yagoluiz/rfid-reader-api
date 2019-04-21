@@ -15,9 +15,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  BuildConfiguration: 'Release'
-  RestoreBuildProjects: '**/*.csproj'
-  RestoreBuildProjectsTest: '**/*[Tt]ests/*.csproj'
   azureSubscriptionEndpoint: unb-azure-resource
   azureContainerRegistry: rfidregistry.azurecr.io
 
@@ -30,15 +27,7 @@ steps:
     azureContainerRegistry: $(azureContainerRegistry)
     dockerFile: '**/Dockerfile'
     imageName: $(Build.Repository.Name)
-
-- task: Docker@2
-  displayName: Tag image
-  inputs:
-    command: tag
-    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-    azureContainerRegistry: $(azureContainerRegistry)
-    imageName: $(azureContainerRegistry)/$(Build.Repository.Name):latest
-    arguments: $(azureContainerRegistry)/$(Build.Repository.Name):$(Build.BuildId)
+    includeLatestTag: true
 
 - task: Docker@2
   displayName: Push image
