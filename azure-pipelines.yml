@@ -3,11 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
@@ -17,52 +12,23 @@ trigger:
     - README.md
 
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'ubuntu-latest'
 
 variables:
   BuildConfiguration: 'Release'
   RestoreBuildProjects: '**/*.csproj'
   RestoreBuildProjectsTest: '**/*[Tt]ests/*.csproj'
-  azureSubscriptionEndpoint: rfidregistry
+  azureSubscriptionEndpoint: unb-azure-resource
   azureContainerRegistry: rfidregistry.azurecr.io
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: '$(RestoreBuildProjects)'
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    projects: '$(RestoreBuildProjects)'
-    arguments: '--configuration $(BuildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Test code coverage
-  inputs:
-    command: test
-    projects: '$(restoreBuildProjectsTest)'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-
-- task: DotNetCoreCLI@2
-  displayName: Publish
-  inputs:
-    command: publish
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    projects: '$(RestoreBuildProjects)'
-    publishWebProjects: false
-    modifyOutputPath: true
-    zipAfterPublish: false
-
 - task: Docker@2
   displayName: Build image
   inputs:
     command: build
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
-    dockerFile: Dockerfile
+    dockerFile: '**/Dockerfile'
     imageName: $(Build.Repository.Name)
 
 - task: Docker@2
