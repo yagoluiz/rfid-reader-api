@@ -28,7 +28,6 @@ steps:
   inputs:
     command: restore
     projects: '$(restoreBuildProjectFunction)'
-    feedRestore: '$(wizCrossFeed)'
 
 - task: DotNetCoreCLI@2
   displayName: Build
