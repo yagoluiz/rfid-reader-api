@@ -10,6 +10,13 @@ WORKDIR /src/services/log/Log.API
 RUN dotnet restore
 RUN dotnet build --no-restore -c Release -o /app
 
+# Unit/Functional Tests
+#FROM build as unittest
+#WORKDIR /src/services/..
+
+#FROM build as functionaltest
+#WORKDIR /src/services/..
+
 FROM build AS publish
 RUN dotnet publish --no-restore -c Release -o /app
 
