@@ -21,7 +21,23 @@ variables:
 
 steps:
 - task: DockerCompose@0
+  displayName: Build services
   inputs:
-    azureSubscriptionEndpoint: 'unb-azure-resource'
-    azureContainerRegistry: '{"loginServer":"rfidregistry.azurecr.io", "id" : "/subscriptions/aeaacfab-b4c6-4bce-b4a5-6d3d18551a72/resourceGroups/unb-prod-rg/providers/Microsoft.ContainerRegistry/registries/rfidregistry"}'
-    action: 'Run a Docker Compose command'
+    action: Build services
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
+    dockerComposeFile: docker-compose.yml
+    projectName: $(Build.Repository.Name)
+    qualifyImageNames: true
+    additionalImageTags: $(Build.BuildId)
+
+- task: DockerCompose@0
+  displayName: Push services
+  inputs:
+    action: Push services
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
+    dockerComposeFile: docker-compose.yml
+    projectName: $(Build.Repository.Name)
+    qualifyImageNames: true
+    additionalImageTags: $(Build.BuildId)
