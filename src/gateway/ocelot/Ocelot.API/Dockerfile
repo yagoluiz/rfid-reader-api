@@ -7,7 +7,8 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 COPY . .
 WORKDIR /src/gateway/ocelot/Ocelot.API
-RUN dotnet restore /src/gateway/ocelot/Ocelot.API/Ocelot.API.csproj
+RUN dotnet clean
+RUN dotnet restore
 RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
