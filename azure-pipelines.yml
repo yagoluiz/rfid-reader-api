@@ -7,6 +7,7 @@ trigger:
   branches:
     include:
     - master
+
   paths:
     exclude:
     - README.md
@@ -19,20 +20,8 @@ variables:
   azureContainerRegistry: rfidregistry.azurecr.io
 
 steps:
-- task: Docker@2
-  displayName: Build image
+- task: DockerCompose@0
   inputs:
-    command: build
-    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-    azureContainerRegistry: $(azureContainerRegistry)
-    dockerFile: '**/Dockerfile'
-    imageName: $(Build.Repository.Name)
-    includeLatestTag: true
-
-- task: Docker@2
-  displayName: Push image
-  inputs:
-    command: push
-    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
-    azureContainerRegistry: $(azureContainerRegistry)
-    imageName: $(Build.Repository.Name):$(Build.BuildId)
+    azureSubscriptionEndpoint: 'unb-azure-resource'
+    azureContainerRegistry: '{"loginServer":"rfidregistry.azurecr.io", "id" : "/subscriptions/aeaacfab-b4c6-4bce-b4a5-6d3d18551a72/resourceGroups/unb-prod-rg/providers/Microsoft.ContainerRegistry/registries/rfidregistry"}'
+    action: 'Run a Docker Compose command'
