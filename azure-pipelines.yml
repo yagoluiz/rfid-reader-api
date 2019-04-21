@@ -29,6 +29,7 @@ steps:
     dockerComposeFile: '**/docker-compose.yml'
     projectName: $(Build.Repository.Name)
     qualifyImageNames: true
+    includeLatestTag: true
     additionalImageTags: $(Build.BuildId)
 
 - task: DockerCompose@0
@@ -40,4 +41,5 @@ steps:
     dockerComposeFile: '**/docker-compose.yml'
     projectName: $(Build.Repository.Name)
     qualifyImageNames: true
+    includeLatestTag: true
     additionalImageTags: $(Build.BuildId)
