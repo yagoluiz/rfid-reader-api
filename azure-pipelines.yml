@@ -28,7 +28,7 @@ steps:
     command: build
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
-    dockerFile: '**/*Dockerfile'
+    dockerFile: '**/Dockerfile'
     imageName: $(Build.Repository.Name)
 
 - task: Docker@2

@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
-      "DownstreamPathTemplate": "/api/v1/assets/read",
+      "DownstreamPathTemplate": "/api/{version}/assets/read",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,8 +21,60 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/api/v1/assets/read",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamPathTemplate": "/api/{version}/assets/read",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/logs/limit/{limit}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "rfid-log-api.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/logs/limit/{limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "rfid-read-api.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "rfid-telemetry-api.azurewebsites.net",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
     }
   ],
   "GlobalConfiguration": {}

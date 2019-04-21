@@ -1,18 +1,17 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY gateway/ocelot/Ocelot.API/Ocelot.API.csproj gateway/ocelot/Ocelot.API/
-RUN dotnet restore gateway/ocelot/Ocelot.API/Ocelot.API.csproj
 COPY . .
 WORKDIR /src/gateway/ocelot/Ocelot.API
-RUN dotnet build Ocelot.API.csproj -c Release -o /app
+RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish Ocelot.API.csproj -c Release -o /app
+RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

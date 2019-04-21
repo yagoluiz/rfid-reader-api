@@ -1,18 +1,17 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
-COPY services/log/Log.API/Log.API.csproj services/log/Log.API/
-RUN dotnet restore services/log/Log.API/Log.API.csproj
 COPY . .
 WORKDIR /src/services/log/Log.API
-RUN dotnet build Log.API.csproj -c Release -o /app
+RUN dotnet restore -nowarn:msb3202,nu1503
+RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish Log.API.csproj -c Release -o /app
+RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app

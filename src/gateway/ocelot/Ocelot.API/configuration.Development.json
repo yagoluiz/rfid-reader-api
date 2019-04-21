@@ -13,6 +13,38 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
+      "DownstreamPathTemplate": "/api/{version}/assets/read",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "asset.api",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/assets/read",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/{version}/logs/limit/{limit}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "log.api",
+          "Port": 443
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{version}/logs/limit/{limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "api_gateway",
+        "AllowedScopes": [ "gateway" ]
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/{version}/reads/limit/{limit}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
