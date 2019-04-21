@@ -6,12 +6,12 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
 WORKDIR /src
 COPY . .
-WORKDIR "/src/gateway/ocelot/Ocelot.API"
-RUN dotnet restore "gateway/ocelot/Ocelot.API/Ocelot.API.csproj"
-RUN dotnet build "Ocelot.API.csproj" -c Release -o /app
+WORKDIR /src/gateway/ocelot/Ocelot.API
+RUN dotnet restore
+RUN dotnet build --no-restore -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "Ocelot.API.csproj" -c Release -o /app
+RUN dotnet publish --no-restore -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
