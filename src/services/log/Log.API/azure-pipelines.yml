@@ -13,7 +13,7 @@ trigger:
     - master
   paths:
     include:
-    - src/services/log*
+    - src/services/log/*
 
 resources:
 - repo: self
