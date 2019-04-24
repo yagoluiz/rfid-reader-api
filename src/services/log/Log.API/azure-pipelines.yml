@@ -15,6 +15,9 @@ trigger:
     include:
     - src/services/log*
 
+resources:
+- repo: self
+
 pool:
   vmImage: 'ubuntu-latest'
 
