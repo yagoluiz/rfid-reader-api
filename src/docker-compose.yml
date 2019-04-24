@@ -13,19 +13,6 @@ services:
       context: .
       dockerfile: security/sso/SSO.API/Dockerfile
 
-  read.api:
-    image: ${DOCKER_REGISTRY-}readapi
-    build:
-      context: .
-      dockerfile: services/read/Read.API/Dockerfile
-
-  telemetry.api:
-    image: ${DOCKER_REGISTRY-}telemetryapi
-    build:
-      context: .
-      dockerfile: services/telemetry/Telemetry.API/Dockerfile
-
-
   asset.api:
     image: ${DOCKER_REGISTRY-}assetapi
     build:
@@ -37,3 +24,15 @@ services:
     build:
       context: .
       dockerfile: services/log/Log.API/Dockerfile
+
+  read.api:
+    image: ${DOCKER_REGISTRY-}readapi
+    build:
+      context: .
+      dockerfile: services/read/Read.API/Dockerfile
+
+  telemetry.api:
+    image: ${DOCKER_REGISTRY-}telemetryapi
+    build:
+      context: .
+      dockerfile: services/telemetry/Telemetry.API/Dockerfile
