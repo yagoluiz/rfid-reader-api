@@ -1,0 +1,41 @@
+# ASP.NET Core:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+# Docker:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/docker
+
+# YAML reference:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - src/services/log*
+
+pool:
+vmImage: 'ubuntu-latest'
+
+variables:
+  azureSubscriptionEndpoint: unb-azure-resource
+  azureContainerRegistry: rfidregistry.azurecr.io
+
+steps:
+- task: Docker@1
+  displayName: 'Build an image'
+  inputs:
+    azureSubscriptionEndpoint: '$(azureSubscriptionEndpoint)'
+    azureContainerRegistry: '$(azureContainerRegistry)'
+    imageName: $(Build.Repository.Name)
+    command: build
+    dockerFile: '**/Dockerfile'
+
+- task: Docker@1
+  displayName: 'Push an image'
+  inputs:
+    azureSubscriptionEndpoint: '$(azureSubscriptionEndpoint)'
+    azureContainerRegistry: '$(azureContainerRegistry)'
+    imageName: $(Build.Repository.Name)
+    command: push
