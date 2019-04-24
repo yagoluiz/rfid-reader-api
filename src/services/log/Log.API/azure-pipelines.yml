@@ -13,7 +13,10 @@ trigger:
     - master
   paths:
     include:
-    - src/services/log*
+    - src/services/log/*
+
+resources:
+- repo: self
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -30,7 +33,7 @@ steps:
     azureContainerRegistry: '$(azureContainerRegistry)'
     imageName: $(Build.Repository.Name)
     command: build
-    dockerFile: 'Dockerfile'
+    dockerFile: 'src/services/log/**/*Dockerfile'
 
 - task: Docker@1
   displayName: 'Push an image'
