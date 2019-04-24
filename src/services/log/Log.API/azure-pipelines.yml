@@ -30,7 +30,7 @@ steps:
     azureContainerRegistry: '$(azureContainerRegistry)'
     imageName: $(Build.Repository.Name)
     command: build
-    dockerFile: '**/Dockerfile'
+    dockerFile: 'Dockerfile'
 
 - task: Docker@1
   displayName: 'Push an image'
