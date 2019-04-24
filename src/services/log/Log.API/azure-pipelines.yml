@@ -16,7 +16,7 @@ trigger:
     - src/services/log*
 
 pool:
-vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   azureSubscriptionEndpoint: unb-azure-resource
