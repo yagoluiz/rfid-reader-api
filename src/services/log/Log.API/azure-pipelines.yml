@@ -1,0 +1,40 @@
+# Docker:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/build/docker
+
+# YAML reference:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema
+
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+- repo: self
+
+variables:
+  azureSubscriptionEndpoint: unb-azure-resource
+  azureContainerRegistry: rfidregistry.azurecr.io
+  imageName: logapi
+
+steps:
+- task: Docker@1
+  displayName: 'Build an image'
+  inputs:
+    command: build
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
+    imageName: $(imageName)
+    includeLatestTag: true
+
+- task: Docker@1
+  displayName: 'Push an image'
+  inputs:
+    command: push
+    azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
+    azureContainerRegistry: $(azureContainerRegistry)
+    imageName: $(imageName)
+    includeLatestTag: true
