@@ -27,6 +27,7 @@ steps:
     command: build
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
+    dockerFile: '/src/services/log/Log.API/Dockerfile'
     imageName: $(imageName)
     includeLatestTag: true
 
@@ -36,5 +37,6 @@ steps:
     command: push
     azureSubscriptionEndpoint: $(azureSubscriptionEndpoint)
     azureContainerRegistry: $(azureContainerRegistry)
+    dockerFile: '/src/services/log/Log.API/Dockerfile'
     imageName: $(imageName)
     includeLatestTag: true
