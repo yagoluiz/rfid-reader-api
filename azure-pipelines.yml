@@ -15,6 +15,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+resources:
+- repo: self
+
 variables:
   buildConfiguration: 'Release'
   restoreBuildProjectFunction: '**/IoT.Function.Trigger.csproj'
