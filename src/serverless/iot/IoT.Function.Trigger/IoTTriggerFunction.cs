@@ -8,17 +8,20 @@ using System;
 using Newtonsoft.Json;
 using IoT.Function.Trigger.Models;
 using System.Threading.Tasks;
-using IoT.Function.Trigger.Services;
 using IoT.Function.Trigger.Enums;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Documents.Client;
 
 namespace IoT.Function.Trigger
 {
     public static class IoTTriggerFunction
     {
         [FunctionName("IoTTriggerFunction")]
-        public static async Task Run([IoTHubTrigger("messages/events",
-            Connection = "ConnectionString",
-            ConsumerGroup = "$Default")]EventData[] events,
+        public static async Task Run(
+            [IoTHubTrigger("messages/events", Connection = "ConnectionString", ConsumerGroup = "$Default")]EventData[] events,
+            [CosmosDB(databaseName: "Rfid", collectionName: "Telemetry", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientTelemetry,
+            [CosmosDB(databaseName: "Rfid", collectionName: "Read", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientRead,
+            [Blob("logs", Connection = "AzureWebJobsStorage")]CloudBlobContainer blobContainer,
             ILogger log)
         {
             log.LogInformation($"EventHubTriggerFunction executed: {DateTime.Now}");
@@ -35,15 +38,16 @@ namespace IoT.Function.Trigger
                 {
                     case (int)TelemetryTypeEnum.TELEMETRY:
                         var telemetryModel = JsonConvert.DeserializeObject<TelemetryModel>(messageBody);
-                        await CosmosService.InsertDocumentTelemetryAsync(telemetryModel);
+                        await clientTelemetry.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("RfidTelemetry", "Telemetry"), telemetryModel);
                         break;
                     case (int)TelemetryTypeEnum.READ:
                         var readModel = JsonConvert.DeserializeObject<ReadModel>(messageBody);
-                        await CosmosService.InsertDocumentReadAsync(readModel);
+                        await clientRead.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("RfidRead", "Read"), readModel);
                         break;
                     case (int)TelemetryTypeEnum.LOG:
                         var logName = Guid.NewGuid().ToString();
-                        await StorageService.InsertBlobAsync($"{logName}.json", messageBody);
+                        var cloudBlockBlob = blobContainer.GetBlockBlobReference($"{logName}.json");
+                        await cloudBlockBlob.UploadTextAsync(messageBody);
                         break;
                     default:
                         log.LogInformation($"EventHubTriggerFunction telemetry type invalid: {telemetryTypeModel.TelemetryType}");

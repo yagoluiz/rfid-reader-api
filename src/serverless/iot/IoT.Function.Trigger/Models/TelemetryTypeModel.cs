@@ -2,6 +2,6 @@
 {
     public class TelemetryTypeModel
     {
-        public int TelemetryType { get; set;  }
+        public int TelemetryType { get; set; }
     }
 }
