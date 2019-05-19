@@ -18,10 +18,10 @@ namespace IoT.Function.Trigger
     {
         [FunctionName("IoTTriggerFunction")]
         public static async Task Run(
-            [IoTHubTrigger("messages/events", Connection = "ConnectionString", ConsumerGroup = "$Default")]EventData[] events,
+            [IoTHubTrigger("messages/events", Connection = "IoTHubConnectionString", ConsumerGroup = "$Default")]EventData[] events,
             [CosmosDB(databaseName: "Rfid", collectionName: "Telemetry", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientTelemetry,
             [CosmosDB(databaseName: "Rfid", collectionName: "Read", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientRead,
-            [Blob("logs", Connection = "AzureWebJobsStorage")]CloudBlobContainer blobContainer,
+            [Blob("logs", Connection = "BlobConnectionString")]CloudBlobContainer blobContainer,
             ILogger log)
         {
             log.LogInformation($"EventHubTriggerFunction executed: {DateTime.Now}");
@@ -38,11 +38,11 @@ namespace IoT.Function.Trigger
                 {
                     case (int)TelemetryTypeEnum.TELEMETRY:
                         var telemetryModel = JsonConvert.DeserializeObject<TelemetryModel>(messageBody);
-                        await clientTelemetry.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("RfidTelemetry", "Telemetry"), telemetryModel);
+                        await clientTelemetry.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("Rfid", "Telemetry"), telemetryModel);
                         break;
                     case (int)TelemetryTypeEnum.READ:
                         var readModel = JsonConvert.DeserializeObject<ReadModel>(messageBody);
-                        await clientRead.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("RfidRead", "Read"), readModel);
+                        await clientRead.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri("Rfid", "Read"), readModel);
                         break;
                     case (int)TelemetryTypeEnum.LOG:
                         var logName = Guid.NewGuid().ToString();
