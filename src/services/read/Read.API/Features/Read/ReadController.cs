@@ -12,7 +12,7 @@ namespace Read.API.Features.Read
     [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/[controller]s")]
+    [Route("api/v{version:apiVersion}/reads")]
     public class ReadController : ControllerBase
     {
         private readonly IMediator _mediator;

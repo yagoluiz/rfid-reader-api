@@ -12,7 +12,7 @@ namespace Telemetry.API.Features.Telemetry
     [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/[controller]s")]
+    [Route("api/v{version:apiVersion}/telemetries")]
     public class TelemetryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,10 +23,10 @@ namespace Telemetry.API.Features.Telemetry
         }
 
         /// <summary>
-        /// Telemetrys by limit count request
+        /// Telemetries by limit count request
         /// </summary>
         /// <param name="request">Limit count request</param>
-        /// <returns>List of telemetry</returns>
+        /// <returns>List of telemetries</returns>
         [HttpGet("limit/{limit}")]
         public async Task<ActionResult<IEnumerable<TelemetryList>>> List([FromQuery]TelemetryListRequest request)
         {

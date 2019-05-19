@@ -11,7 +11,7 @@ namespace Asset.API.Features.Asset
     [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/[controller]s")]
+    [Route("api/v{version:apiVersion}/assets")]
     public class AssetController : ControllerBase
     {
         private readonly IMediator _mediator;

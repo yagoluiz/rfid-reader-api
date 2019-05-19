@@ -26,7 +26,11 @@ namespace Read.API.Features.Read
                 UriFactory.CreateDocumentCollectionUri(_configuration["CosmosDB:Database"], _configuration["CosmosDB:Collection"]),
                 @"SELECT DISTINCT read.epc
                     FROM read",
-                new FeedOptions { MaxItemCount = -1 })
+                new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    MaxItemCount = -1
+                })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
@@ -47,7 +51,11 @@ namespace Read.API.Features.Read
                 $@"SELECT TOP {limit} read.ip, read.epc, read.readDate, read.antenna
                     FROM read
                     ORDER BY read._ts DESC",
-                new FeedOptions { MaxItemCount = -1 })
+                new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    MaxItemCount = -1
+                })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)

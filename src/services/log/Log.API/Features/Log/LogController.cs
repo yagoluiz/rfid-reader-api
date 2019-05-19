@@ -12,7 +12,7 @@ namespace Log.API.Features.Log
     [Authorize(AuthenticationSchemes = TokenAuthenticationOptions.Bearer)]
     [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/[controller]s")]
+    [Route("api/v{version:apiVersion}/logs")]
     public class LogController : ControllerBase
     {
         private readonly IMediator _mediator;

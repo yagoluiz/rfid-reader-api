@@ -61,7 +61,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "DownstreamPathTemplate": "/api/{version}/telemetries/limit/{limit}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -69,7 +69,7 @@
           "Port": 443
         }
       ],
-      "UpstreamPathTemplate": "/api/{version}/telemetrys/limit/{limit}",
+      "UpstreamPathTemplate": "/api/{version}/telemetries/limit/{limit}",
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "api_gateway",

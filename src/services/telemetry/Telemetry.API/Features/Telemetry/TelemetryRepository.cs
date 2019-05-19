@@ -27,7 +27,11 @@ namespace Telemetry.API.Features.Telemetry
                 $@"SELECT TOP {limit} telemetry.ip, telemetry.temperature, telemetry.isConnection
                     FROM telemetry
                     ORDER BY telemetry._ts DESC",
-                new FeedOptions { MaxItemCount = -1 })
+                new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    MaxItemCount = -1
+                })
                 .AsDocumentQuery();
 
             while (query.HasMoreResults)
