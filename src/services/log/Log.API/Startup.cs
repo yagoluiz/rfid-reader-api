@@ -67,7 +67,10 @@ namespace Log.API
                 }));
             });
             services.AddHealthChecksUI()
-                .AddHealthChecks();
+                .AddHealthChecks()
+                .AddAzureBlobStorage(Configuration["AzureStorage:ConnectionString"],
+                    name: Configuration["ContainerBlob"])
+                .AddApplicationInsightsPublisher();
 
             RegisterServices(services);
         }
