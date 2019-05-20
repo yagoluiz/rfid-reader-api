@@ -19,8 +19,8 @@ namespace IoT.Function.Trigger
         [FunctionName("IoTTriggerFunction")]
         public static async Task Run(
             [IoTHubTrigger("messages/events", Connection = "IoTHubConnectionString", ConsumerGroup = "$Default")]EventData[] events,
-            [CosmosDB(databaseName: "Rfid", collectionName: "Telemetry", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientTelemetry,
-            [CosmosDB(databaseName: "Rfid", collectionName: "Read", ConnectionStringSetting = "CosmosDBConnection")] DocumentClient clientRead,
+            [CosmosDB(databaseName: "Rfid", collectionName: "Telemetry", ConnectionStringSetting = "CosmosDBConnection")]DocumentClient clientTelemetry,
+            [CosmosDB(databaseName: "Rfid", collectionName: "Read", ConnectionStringSetting = "CosmosDBConnection")]DocumentClient clientRead,
             [Blob("logs", Connection = "BlobConnectionString")]CloudBlobContainer blobContainer,
             ILogger log)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +19,7 @@ namespace Asset.API.Features.Asset
         {
             var message = string.Empty;
 
-            var messageReceive = await _assetContext.MessageReceiver.ReceiveAsync(TimeSpan.FromMilliseconds(5));
+            var messageReceive = await _assetContext.MessageReceiver.ReceiveAsync();
             await _assetContext.MessageReceiver.CloseAsync();
 
             if (messageReceive == null) return message;

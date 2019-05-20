@@ -48,7 +48,7 @@ namespace Asset.API.Infrastructure
                         name: "Computer",
                         identifierNumber: "A-001",
                         serialNumber: "X6HSZBOBAPY6ZCZ",
-                        epc: "42414E303030303336343631",
+                        epc: "494E44553030303030613133",
                         situation: true,
                         dateCreated: DateTime.Now),
                      new AssetItem(id: Guid.NewGuid(),
@@ -66,7 +66,7 @@ namespace Asset.API.Infrastructure
                         name: "Chair",
                         identifierNumber: "A-003",
                         serialNumber: "TTN33BTWDC5E8SR",
-                        epc: "494E44303030303030613161",
+                        epc: "E2002083980201001070A87F",
                         situation: true,
                         dateCreated: DateTime.Now)
                 };
