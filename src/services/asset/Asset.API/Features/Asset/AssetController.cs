@@ -28,14 +28,7 @@ namespace Asset.API.Features.Asset
         [HttpGet("read")]
         public async Task<ActionResult<AssetItemReadGet>> Get()
         {
-            var asset = await _mediator.Send(new AssetItemReadGetRequest());
-
-            if (asset == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(asset);
+            return Ok(await _mediator.Send(new AssetItemReadGetRequest()));
         }
     }
 }
