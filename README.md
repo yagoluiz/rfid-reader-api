@@ -1,6 +1,6 @@
 # Service Architecture for Reading RFID tags 
 
-[![Build Status](https://dev.azure.com/teamyagoluiz/UnB/_apis/build/status/rfid-reader-web%20CI?branchName=master)](https://dev.azure.com/teamyagoluiz/UnB/_build/latest?definitionId=5&branchName=master)
+[![Build Status](https://dev.azure.com/teamyagoluiz/UnB/_apis/build/status/rfid-reader-api%20CI?branchName=master)](https://dev.azure.com/teamyagoluiz/UnB/_build/latest?definitionId=1&branchName=master)
 
 Service architecture for reading RFID tags, implemented in the year 2019 for Master's Work.
 
@@ -37,7 +37,7 @@ TODO: Inserir imagens de serviços utilizadas
 
 # [PT-BR] Arquitetura de Serviços para Leitura de Tags RFID
 
-[![Build Status](https://dev.azure.com/teamyagoluiz/UnB/_apis/build/status/rfid-reader-web%20CI?branchName=master)](https://dev.azure.com/teamyagoluiz/UnB/_build/latest?definitionId=5&branchName=master)
+[![Build Status](https://dev.azure.com/teamyagoluiz/UnB/_apis/build/status/rfid-reader-api%20CI?branchName=master)](https://dev.azure.com/teamyagoluiz/UnB/_build/latest?definitionId=1&branchName=master)
 
 Arquitetura de serviços para leitura de tags RFID, implementado no ano de 2019 para trabalho de Mestrado.
 
