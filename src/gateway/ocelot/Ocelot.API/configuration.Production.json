@@ -5,7 +5,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "rfid-sso-api.azurewebsites.net",
+          "Host": "{URL_PROD}",
           "Port": 443
         }
       ],
@@ -17,7 +17,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "rfid-asset-api.azurewebsites.net",
+          "Host": "{URL_PROD}",
           "Port": 443
         }
       ],
@@ -33,7 +33,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "rfid-log-api.azurewebsites.net",
+          "Host": "{URL_PROD}",
           "Port": 443
         }
       ],
@@ -49,7 +49,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "rfid-read-api.azurewebsites.net",
+          "Host": "{URL_PROD}",
           "Port": 443
         }
       ],
@@ -65,7 +65,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "rfid-telemetry-api.azurewebsites.net",
+          "Host": "{URL_PROD}",
           "Port": 443
         }
       ],
